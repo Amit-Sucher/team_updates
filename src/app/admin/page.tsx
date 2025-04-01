@@ -5,6 +5,18 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
 import { UploadButton } from '@uploadthing/react';
 import { OurFileRouter } from '../api/uploadthing/core';
+import Image from 'next/image';
+
+interface FormEvent extends React.FormEvent {
+  currentTarget: HTMLFormElement & {
+    email: { value: string };
+    password: { value: string };
+  };
+}
+
+interface UploadResponse {
+  url: string;
+}
 
 export default function AdminPage() {
   const router = useRouter();
@@ -15,10 +27,10 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: FormEvent) => {
     e.preventDefault();
-    const email = (e.currentTarget as any).email.value;
-    const password = (e.currentTarget as any).password.value;
+    const email = e.currentTarget.email.value;
+    const password = e.currentTarget.password.value;
 
     const result = await signIn('credentials', {
       email,
@@ -67,7 +79,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleInlineImageUpload = (res: any) => {
+  const handleInlineImageUpload = (res: UploadResponse[]) => {
     if (res?.[0]) {
       const imageMarkdown = `\n![Image](${res[0].url})\n`;
       setContent(prev => prev + imageMarkdown);
@@ -201,11 +213,12 @@ export default function AdminPage() {
             className="ut-button:bg-[#012265] ut-button:text-white ut-button:hover:bg-[#012265]/90"
           />
           {imageUrl && (
-            <div className="mt-2">
-              <img
+            <div className="mt-2 relative w-full max-w-xs h-48">
+              <Image
                 src={imageUrl}
                 alt="Featured Preview"
-                className="max-w-[80%] rounded-lg shadow-sm"
+                fill
+                className="rounded-lg shadow-sm object-cover"
               />
             </div>
           )}

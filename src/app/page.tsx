@@ -3,8 +3,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
-import { redirect } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+
+interface Update {
+  id: string;
+  title: string;
+  content: string;
+  imageUrl?: string;
+  createdAt: string;
+  author?: {
+    name: string;
+  };
+}
 
 async function getUpdates() {
   const headersList = await headers();
@@ -41,7 +51,7 @@ export default async function Home() {
       </div>
 
       <div className="space-y-8">
-        {updates.map((update: any) => (
+        {updates.map((update: Update) => (
           <article key={update.id} className="bg-white rounded-lg shadow-md overflow-hidden border-t-4 border-[#d3af37]">
             {update.imageUrl && (
               <div className="relative h-52 w-full">
