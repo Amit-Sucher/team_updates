@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from './api/auth/auth.config';
 import ReactMarkdown from 'react-markdown';
 
 interface Update {
